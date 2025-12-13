@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Registrar Envío
+{% endblock title %}
+
+{% block content %}
+<div class="container pb-2 pt-2">
+    <h2 class="text-center texttitle mb-4">Registrar de Encomiendas</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row contenrow">
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="mb-3">
+                            <label for="fecha_envio" class="form-label">Fecha de Envío</label>
+                            {{ form.fecha_envio }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="cliente" class="form-label">Cliente</label>
+                            {{ form.cliente }}
+                        </div>
+                    </div>
+                    <div class="col-4 ">
+                        <div class="mb-3">
+                            <label for="peso" class="form-label">Peso en Kg.</label>
+                            {{ form.peso }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="dimensiones" class="form-label">Dimensiones</label>
+                            {{ form.dimensiones }}
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    {{ form.descripcion }}
+                </div>
+                <div class="mb-3">
+                    <label for="imagen" class="form-label">Imagen</label>
+                    {{ form.imagen }}
+                </div>
+                <div class="row">
+                    <div class="col-9">
+                        <div class="mb-3">
+                            <label for="direccion_destino" class="form-label">Dirección de Destino</label>
+                            {{ form.direccion_destino }}
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="mb-3">
+                            <label for="precio" class="form-label">Precio</label>
+                            {{ form.precio }}
+                        </div>
+                    </div>
+                </div>
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn btn-secondary text-white ">Crear Paquete</button>
+                    <a href="{% url 'home' %}" class="btn btn-outline-danger">Cancelar</a>
+                </div>
+            </div>
+
+            <!-- Segunda columna: Imagen -->
+            <div class="col-md-5">
+                <img src="{% static 'img/pp.png' %}" class="img-fluid" alt="Imagen ejemplo">
+            </div>
+        </div>
+        
+    </form>
+</div>
+{% endblock content %}

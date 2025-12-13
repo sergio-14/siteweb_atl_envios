@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Listado de Paquetes
+{% endblock title %}
+
+{% block content %}
+<div class="container my-5 contenrow">
+    <h2 class="texttitle text-white">Listado de Envios y Encomiendas</h2>
+    <!-- Filtros -->
+    <div class="row g-3 mb-4">
+        <!-- Filtro por Fecha -->
+        <div class="col-md-6">
+            <form method="GET">
+                <label for="fecha" class="form-label">Filtrar por Fecha</label>
+                <input type="date" id="fecha" name="fecha" class="form-control" value="{{ fecha_filtro }}">
+                {% if cliente_filtro %}
+                    <input type="hidden" name="cliente" value="{{ cliente_filtro }}">
+                {% endif %}
+                <button type="submit" class="btn btn-warning text-white mt-2">Filtrar por Fecha</button>
+            </form>
+        </div>
+
+        <!-- Filtro por Cliente -->
+        <div class="col-md-6">
+            <form method="GET">
+                <label for="cliente" class="form-label">Filtrar por Cliente</label>
+                <input type="text" id="cliente" name="cliente" class="form-control" placeholder="Nombre de cliente" value="{{ cliente_filtro }}">
+                {% if fecha_filtro %}
+                    <input type="hidden" name="fecha" value="{{ fecha_filtro }}">
+                {% endif %}
+                <button type="submit" class="btn btn-warning text-white mt-2">Filtrar por Cliente</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla de paquetes -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Fecha de Envío</th>
+                <th>Cliente</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paquete in paquetes %}
+            <tr>
+                <td>{{ paquete.fecha_envio }}</td>
+                <td>{{ paquete.cliente.user.get_full_name }}</td>
+                <td>{{ paquete.descripcion }}</td>
+                <td>{{ paquete.precio }}</td>
+                <td class="text-center">
+                    <div class="d-flex text-center">
+                        <!-- Botón para Ver Detalles -->
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#detalleModal{{ paquete.id }}">Ver Detalles</button>
+                
+                        <!-- Botón para Cambiar Estado (si no está entregado) -->
+                        {% if paquete.estado.nombre_estado != 'Entregado' %}
+                        <form method="post" action="{% url 'cambiar_estado_paquete' paquete.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success ms-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-square-fill" viewBox="0 0 16 16">
+                                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
+                                </svg>
+                            </button>
+                        </form>
+                        {% else %}
+                        <p>Entregado ✔✔.</p>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Total de ganancias -->
+    <div class="mt-4 fw-bold text-white texttitle">
+        <p><strong>Total de Ganancias:</strong> {{ total_ganancias }} Bs.</p>
+    </div>
+
+    <!-- Paginación -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if paquetes.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if fecha_filtro %}&fecha={{ fecha_filtro }}{% endif %}{% if cliente_filtro %}&cliente={{ cliente_filtro }}{% endif %}">
+                        Primera
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ paquetes.previous_page_number }}{% if fecha_filtro %}&fecha={{ fecha_filtro }}{% endif %}{% if cliente_filtro %}&cliente={{ cliente_filtro }}{% endif %}">
+                        Anterior
+                    </a>
+                </li>
+            {% endif %}
+            <li class="page-item active"><a class="page-link">{{ paquetes.number }}</a></li>
+            {% if paquetes.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ paquetes.next_page_number }}{% if fecha_filtro %}&fecha={{ fecha_filtro }}{% endif %}{% if cliente_filtro %}&cliente={{ cliente_filtro }}{% endif %}">
+                        Siguiente
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ paquetes.paginator.num_pages }}{% if fecha_filtro %}&fecha={{ fecha_filtro }}{% endif %}{% if cliente_filtro %}&cliente={{ cliente_filtro }}{% endif %}">
+                        Última
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+<!-- Modal para ver detalles del paquete -->
+{% for paquete in paquetes %}
+<div class="modal fade" id="detalleModal{{ paquete.id }}" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleModalLabel">Detalles del Envios Encomiendas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                {% if paquete.imagen %}
+                <img src="{{ paquete.imagen.url }}" class="img-fluid contimg mb-3" alt="Imagen del paquete">
+                {% else %}
+                <p>No hay imagen disponible</p>
+                {% endif %}
+                <p><strong>Descripción:</strong> {{ paquete.descripcion }}</p>
+                <p><strong>Peso:</strong> {{ paquete.peso }} kg</p>
+                <p><strong>Dimensiones:</strong> {{ paquete.dimensiones }}</p>
+                <p><strong>Estado:</strong> {{ paquete.estado }}</p>
+                <p><strong>Precio:</strong> {{ paquete.precio }} Bs.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock content %}

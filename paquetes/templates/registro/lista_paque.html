@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Registrar Envío
+{% endblock title %}
+
+{% block content %}<br><br><br>
+<h2 class="text-white">Lista de Mis Recepcion de  Envios y Encomiendas </h2>
+
+{% if paquetes %}
+
+  <table class=" table table-striped">
+    <thead>
+      <tr>
+        <th>Descripción</th>
+        
+        <th>Fecha Envio</th>
+        <th>Precio</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for paquete in paquetes %}
+        <tr>
+          <td>{{ paquete.descripcion }}</td>
+          
+          <td>{{ paquete.fecha_envio }}</td>
+          <td>{{ paquete.precio }}</td>
+          <td class="text-end">
+            <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#detalleModal{{ paquete.id }}">Ver Detalles</button>
+            <a href="{% url 'generar_factura' paquete.id %}" class="btn btn-warning btn-sm">
+              Generar Factura
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No tienes paquetes registrados.</p>
+{% endif %}
+
+<!-- Modal para ver detalles del paquete -->
+{% for paquete in paquetes %}
+<div class="modal fade" id="detalleModal{{ paquete.id }}" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleModalLabel">Detalles del Paquete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                {% if paquete.imagen %}
+                <img src="{{ paquete.imagen.url }}" class="img-fluid contimg mb-3" alt="Imagen del paquete">
+                {% else %}
+                <p>No hay imagen disponible</p>
+                {% endif %}
+                <p><strong>Descripción:</strong> {{ paquete.descripcion }}</p>
+                <p><strong>Peso:</strong> {{ paquete.peso }} kg</p>
+                <p><strong>Dimensiones:</strong> {{ paquete.dimensiones }}</p>
+                <p><strong>Estado:</strong> {{ paquete.estado }}</p>
+                <p><strong>Precio:</strong> {{ paquete.precio }} Bs.</p>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock content %}

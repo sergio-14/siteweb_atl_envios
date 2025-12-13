@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}
+Servicio de Transporte | Inicio
+{% endblock title %}
+
+{% block content %}
+
+{# ---------------------------------------------------- #}
+{# SECCIÓN HEROE (Principal) #}
+{# ---------------------------------------------------- #}
+<header class="hero-section text-light py-2 py-lg-6 mb-5" 
+        style="background-image: url('{% static 'img/bg1.jpg' %}');">
+    
+    {# Capa de superposición para que el texto se lea mejor sobre la imagen #}
+    <div class="overlay"></div>
+    
+    <div class="container position-relative z-index-1">
+        <div class="row align-items-center justify-content-center text-center text-md-start">
+            
+            <div class="col-12 col-lg-10">
+                <h1 class=" fw-bold mb-3 text-white animate__animated animate__fadeInDown">
+                    <i class="bi bi-truck me-2"></i> Transporte Rápido y Seguro ATL Trinidad
+                </h1>
+                <p class="lead mb-4 text-black-50 fw-bold animate__animated animate__fadeInUp animate__delay-1s">
+                    Somos el **Servicio de Transporte N° 1** en la región. Confiabilidad y eficiencia garantizadas para todos tus envíos, desde paquetes pequeños hasta cargas mayores.
+                </p>
+                
+                <div class="d-grid d-sm-flex justify-content-center justify-content-md-start gap-3 mt-5 animate__animated animate__zoomIn animate__delay-2s">
+                    
+                    {% if user|has_group:"grupo_empleado" %}
+                    <a href="{% url 'crear_envio' %}" class="btn text-white btn-warning btn-lg fw-bold shadow-lg py-2 px-4">
+                        <i class="bi bi-box-seam me-2"></i> Realizar Encomienda o Envio
+                    </a>
+                    <a href="{% url 'listar_paquetes' %}" class="btn btn-primary btn-lg py-2 px-4" >
+                        <i class="bi bi-box-seam me-2"></i> Lista de Ecomiendas y  Envios 
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+{# ---------------------------------------------------- #}
+{# SECCIÓN DE CARACTERÍSTICAS (Con Glassmorphism) #}
+{# ---------------------------------------------------- #}
+<div class="container py-5">
+    <h2 class="text-center mb-5 fw-bold text-dark">¿Por qué elegirnos?</h2>
+    <div class="row text-center g-4">
+        
+        {# Tarjeta 1: Seguridad #}
+        <div class="col-md-4">
+            <div class="p-4 rounded-3 h-100 shadow-lg glass-effect feature-card">
+                <i class="bi bi-shield-lock-fill display-5 text-white mb-3"></i>
+                <h3 class="h5 fw-bold">Seguridad Garantizada</h3>
+                <p>Manejamos tus paquetes con el mayor cuidado desde la recolección hasta la entrega.</p>
+            </div>
+        </div>
+        
+        {# Tarjeta 2: Cobertura #}
+        <div class="col-md-4">
+            <div class="p-4 rounded-3 h-100 shadow-lg glass-effect feature-card">
+                <i class="bi bi-geo-alt-fill display-5 text-white mb-3"></i>
+                <h3 class="h5 fw-bold">Cobertura Total</h3>
+                <p>Nuestra red abarca toda la ciudad de Trinidad y sus áreas cercanas.</p>
+            </div>
+        </div>
+        
+        {# Tarjeta 3: Velocidad #}
+        <div class="col-md-4">
+            <div class="p-4 rounded-3 h-100 shadow-lg glass-effect feature-card">
+                <i class="bi bi-speedometer display-5 text-white mb-3"></i>
+                <h3 class="h5 fw-bold">Entrega Express</h3>
+                <p>Opciones de envío rápido para tus necesidades más urgentes.</p>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Acme&family=Jaro:opsz@6..72&family=Lobster&family=Pacifico&family=Protest+Strike&display=swap');
+
+/* Configuración General para el Hero */
+.hero-section {
+    min-height: 50vh; /* Haz que la sección sea más alta para impacto */
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden; 
+    border-radius: 12px;
+}
+
+/* Estilo para la capa oscura que mejora la lectura del texto */
+.hero-section .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 12px;
+
+    /* Oscurece el fondo y le da un color primario sutil */
+    background: linear-gradient(135deg, rgba(248, 250, 145, 0.75), rgba(235, 235, 235, 0.65));
+    backdrop-filter: blur(2px); /* Añadimos un blur muy sutil a la imagen del fondo */
+    -webkit-backdrop-filter: blur(2px);
+}
+
+/* ================================================= */
+/* EFECTO GLASSMORFISMO para las tarjetas */
+/* ================================================= */
+
+.glass-effect {
+    /* 1. Fondo semi-transparente (lo que permite ver el fondo) */
+    background-color: rgba(255, 255, 255, 0.15); 
+    
+    /* 2. El corazón del efecto: desenfoque del fondo */
+    backdrop-filter: blur(20px); /* Un poco más de blur */
+    -webkit-backdrop-filter: blur(10px); 
+    
+    /* 3. Borde de 'vidrio' */
+    border: 1px solid rgba(255, 255, 255, 0.774); /* Borde más visible */
+    
+    /* 4. Sombra con más profundidad */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.116);
+    
+    /* 5. Color del texto oscuro para contraste con el fondo claro de vidrio */
+    color: #1a1a1a; 
+    
+    /* 6. Transición para el efecto hover */
+    transition: all 0.3s ease-in-out;
+}
+
+/* Efecto hover elegante para Glassmorphism */
+.feature-card.glass-effect:hover {
+    transform: translateY(-8px); /* Se levanta más al pasar el ratón */
+    background-color: rgba(255, 255, 255, 0.25); /* Se vuelve un poco más sólido */
+    box-shadow: 0 15px 45px rgba(31, 38, 135, 0.5); 
+}
+
+
+
+.titulo{
+    font-family: "Jaro", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 43px;
+    color: rgb(4, 4, 71);
+
+}
+
+.main-header .brand-link .brand-image {
+    /* Por ejemplo, 50px de altura */
+    max-height: 50px !important; 
+    width: auto !important;
+    margin-right: 0.5rem; /* Ajusta el margen si es necesario */
+}
+
+/* Selector para el texto de la marca (opcional) */
+.main-header .brand-link .brand-text {
+    font-size: 1.5rem; /* Hace el texto un poco más grande */
+    font-weight: 700;
+}
+.subtitulo{
+    font-family: "Jaro", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 23px;
+    color: rgb(224, 192, 6);
+
+}
+.perbg{
+    background: rgba(240, 187, 14, 0.822);
+    color: aliceblue;
+    font-family: "Jaro", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 23px;
+}
+.contimg{
+    max-width: 400px;
+    max-height: 260px;
+    border-radius: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.contenrow{
+    border: 2px rgb(255, 251, 0) solid;
+    border-radius: 20px;
+    padding: 30px;
+}
+.texttitle{
+    font-size: 35px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+
+}
+.fixed-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050; /* Asegura que esté encima de otros elementos */
+}
+
+/* Botón de flecha hacia arriba */
+.scroll-to-top {
+    position: fixed;
+    bottom: 80px; /* Justo por encima del otro botón */
+    right: 20px;
+    z-index: 1050;
+   
+    color: white;
+}
