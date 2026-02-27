@@ -6,9 +6,10 @@ class Cliente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cliente_profile')  
     direccion = models.CharField(max_length=255)
     telefono = models.CharField(max_length=15)
+    ci = models.CharField(max_length=20, unique=True, verbose_name="Cédula de Identidad", blank=True, null=True)
 
     def __str__(self):
-        return self.user.get_full_name()  
+        return f"{self.user.get_full_name()} - {self.ci}"
 
 
 # Modelo Empleado relacionado con User
@@ -48,6 +49,12 @@ class Paquete(models.Model):
     dimensiones = models.CharField(max_length=50)  
     cliente = models.ForeignKey('Cliente', on_delete=models.CASCADE, related_name='paquetes')
     imagen = models.ImageField(upload_to='paquetes/', null=True, blank=True)  
+    
+    # --- NUEVOS CAMPOS ---
+    origen = models.CharField(max_length=100, default="Oficina ATL")
+    destino = models.CharField(max_length=255) # Aquí puedes poner la ciudad o sucursal destino
+    # ---------------------
+
     direccion_destino = models.CharField(max_length=255)  
     empleado = models.ForeignKey('Empleado', on_delete=models.CASCADE)
     fecha_envio = models.DateTimeField()
@@ -55,4 +62,4 @@ class Paquete(models.Model):
     precio = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.descripcion} - Cliente: {self.cliente.user.get_full_name()}"
+        return f"{self.descripcion} | {self.origen} -> {self.destino}"

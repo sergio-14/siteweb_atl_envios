@@ -1,66 +1,93 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}
-Registrar Envío
-{% endblock title %}
 
-{% block content %}<br><br><br>
-<h2 class="text-white">Lista de Mis Recepcion de  Envios y Encomiendas </h2>
+{% block title %}Mis Envíos{% endblock title %}
 
-{% if paquetes %}
+{% block content %}
+<div class="container my-5 contenrow">
+    <h2 class="text-white texttitle mb-4">Lista de Mis Envíos y Encomiendas</h2>
 
-  <table class=" table table-striped">
-    <thead>
-      <tr>
-        <th>Descripción</th>
-        
-        <th>Fecha Envio</th>
-        <th>Precio</th>
-        <th class="text-center">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for paquete in paquetes %}
-        <tr>
-          <td>{{ paquete.descripcion }}</td>
-          
-          <td>{{ paquete.fecha_envio }}</td>
-          <td>{{ paquete.precio }}</td>
-          <td class="text-end">
-            <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#detalleModal{{ paquete.id }}">Ver Detalles</button>
-            <a href="{% url 'generar_factura' paquete.id %}" class="btn btn-warning btn-sm">
-              Generar Factura
-            </a>
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-{% else %}
-  <p>No tienes paquetes registrados.</p>
-{% endif %}
+    {% if paquetes %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle text-dark" style="background-color: #ffc107;">
+            <thead class="table-dark">
+                <tr>
+                    <th>Descripción</th>
+                    <th>Fecha Envío</th>
+                    <th>Origen</th>  <th>Destino</th> <th>Estado</th>
+                    <th>Precio</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paquete in paquetes %}
+                <tr>
+                    <td class="fw-bold">{{ paquete.descripcion }}</td>
+                    <td>{{ paquete.fecha_envio|date:"d/m/Y H:i" }}</td>
+                    <td>{{ paquete.origen }}</td>    <td>{{ paquete.destino }}</td>   <td>
+                        {% if paquete.estado.nombre_estado == 'Entregado' %}
+                            <span class="badge bg-success">Entregado</span>
+                        {% elif paquete.estado.nombre_estado == 'Pendiente' %}
+                            <span class="badge bg-warning text-dark">Llegado a Destino</span>
+                        {% else %}
+                            <span class="badge bg-primary">{{ paquete.estado.nombre_estado }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ paquete.precio }} Bs.</td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <button class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#detalleModal{{ paquete.id }}">
+                                Detalles
+                            </button>
+                            
+                            {% if paquete.estado.nombre_estado == 'Entregado' %}
+                                <a href="{% url 'generar_factura' paquete.id %}" 
+                                   class="btn btn-danger btn-sm" 
+                                   target="_blank" 
+                                   title="Previsualizar Factura">
+                                    📄 PDF
+                                </a>
+                            {% else %}
+                                <button class="btn btn-secondary btn-sm" disabled title="Factura disponible al entregar">
+                                    📄 PDF
+                                </button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">
+        No tienes paquetes registrados actualmente.
+    </div>
+    {% endif %}
+</div>
 
-<!-- Modal para ver detalles del paquete -->
 {% for paquete in paquetes %}
-<div class="modal fade" id="detalleModal{{ paquete.id }}" tabindex="-1" aria-labelledby="detalleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
+<div class="modal fade" id="detalleModal{{ paquete.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-dark">
             <div class="modal-header">
-                <h5 class="modal-title" id="detalleModalLabel">Detalles del Paquete</h5>
+                <h5 class="modal-title">Detalles del Paquete</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
                 {% if paquete.imagen %}
-                <img src="{{ paquete.imagen.url }}" class="img-fluid contimg mb-3" alt="Imagen del paquete">
-                {% else %}
-                <p>No hay imagen disponible</p>
+                    <img src="{{ paquete.imagen.url }}" class="img-fluid mb-3 rounded" style="max-height: 200px;" alt="Imagen">
                 {% endif %}
-                <p><strong>Descripción:</strong> {{ paquete.descripcion }}</p>
-                <p><strong>Peso:</strong> {{ paquete.peso }} kg</p>
-                <p><strong>Dimensiones:</strong> {{ paquete.dimensiones }}</p>
-                <p><strong>Estado:</strong> {{ paquete.estado }}</p>
-                <p><strong>Precio:</strong> {{ paquete.precio }} Bs.</p>
-                
+                <div class="text-start px-3">
+                    <p><strong>Descripción:</strong> {{ paquete.descripcion }}</p>
+                    <p><strong>Origen:</strong> {{ paquete.origen }}</p>
+                    <p><strong>Destino:</strong> {{ paquete.destino }}</p>
+                    <p><strong>Dirección Destino:</strong> {{ paquete.direccion_destino }}</p>
+                    <p><strong>Peso:</strong> {{ paquete.peso }} kg</p>
+                    <p><strong>Dimensiones:</strong> {{ paquete.dimensiones }}</p>
+                    <p><strong>Estado:</strong> {{ paquete.estado.nombre_estado }}</p>
+                    <p><strong>Precio:</strong> {{ paquete.precio }} Bs.</p>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -69,4 +96,5 @@ Registrar Envío
     </div>
 </div>
 {% endfor %}
+
 {% endblock content %}

@@ -22,7 +22,7 @@ Registrar Envío
                             {{ form.cliente }}
                         </div>
                     </div>
-                    <div class="col-4 ">
+                    <div class="col-4">
                         <div class="mb-3">
                             <label for="peso" class="form-label">Peso en Kg.</label>
                             {{ form.peso }}
@@ -41,10 +41,25 @@ Registrar Envío
                     <label for="imagen" class="form-label">Imagen</label>
                     {{ form.imagen }}
                 </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="origen" class="form-label">Origen (Oficina)</label>
+                            {{ form.origen }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="destino" class="form-label">Sucursal/Ciudad Destino</label>
+                            {{ form.destino }}
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-9">
                         <div class="mb-3">
-                            <label for="direccion_destino" class="form-label">Dirección de Destino</label>
+                            <label for="direccion_destino" class="form-label">Dirección Exacta de Destino</label>
                             {{ form.direccion_destino }}
                         </div>
                     </div>
@@ -56,12 +71,11 @@ Registrar Envío
                     </div>
                 </div>
                 <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-secondary text-white ">Crear Paquete</button>
+                    <button type="submit" class="btn btn-secondary text-white">Crear Paquete</button>
                     <a href="{% url 'home' %}" class="btn btn-outline-danger">Cancelar</a>
                 </div>
             </div>
 
-            <!-- Segunda columna: Imagen -->
             <div class="col-md-5">
                 <img src="{% static 'img/pp.png' %}" class="img-fluid" alt="Imagen ejemplo">
             </div>

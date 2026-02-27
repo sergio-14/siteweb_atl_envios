@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-white mb-4">Registro de Paquetes </h2>
+
+    <div class="card bg-dark text-white border-warning p-3 mb-4">
+        <form method="GET" class="row g-3">
+            <div class="col-md-5">
+                <label>Filtrar por Destino</label>
+                <input type="text" name="destino" class="form-control" value="{{ destino_filtro }}" placeholder="Ciudad o Sucursal">
+            </div>
+            <div class="col-md-5">
+                <label>Filtrar por Estado</label>
+                <select name="estado" class="form-select">
+                    <option value="">Todos los estados</option>
+                    {% for est in estados %}
+                        <option value="{{ est.id }}" {% if estado_filtro == est.id|stringformat:"i" %}selected{% endif %}>
+                            {{ est.nombre_estado }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-warning mt-4">Filtrar</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle" style="background-color: #fff3cd;">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th> <th>Cliente</th> <th>Origen</th>
+                    <th>Destino</th>
+                    <th>Estado Actual</th>
+                    <th>Registrado por</th>
+                    <th>Acciones</th> 
+                </tr>
+            </thead>
+            <tbody>
+                {% for paquete in paquetes %}
+                <tr>
+                    <td class="text-dark fw-bold">{{ forloop.counter }}</td> <td class="text-dark">
+                        {{ paquete.cliente.user.get_full_name }}<br>
+                        <small class="text-muted">CI: {{ paquete.cliente.ci }}</small>
+                    </td> <td class="fw-bold text-dark">{{ paquete.origen }}</td>
+                    <td class="text-dark">
+                        {{ paquete.destino }}<br>
+                        <small class="text-muted">{{ paquete.direccion_destino }}</small>
+                    </td>
+                    <td>
+                        {% if paquete.estado.nombre_estado == 'Entregado' %}
+                            <span class="badge bg-success">Entregado</span>
+                        {% elif paquete.estado.nombre_estado == 'Pendiente' %}
+                            <span class="badge bg-warning text-dark">Llegado a Destino</span>
+                        {% else %}
+                            <span class="badge bg-primary">{{ paquete.estado.nombre_estado }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-dark">{{ paquete.empleado.user.get_full_name }}</td>
+                    <td>
+                        {% if paquete.estado.nombre_estado != 'Entregado' and paquete.estado.nombre_estado != 'Pendiente' %}
+                            <button type="button" class="btn btn-warning btn-sm" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#llegadaModal{{ paquete.id }}">
+                                Marcar Llegada
+                            </button>
+                        {% elif paquete.estado.nombre_estado == 'Pendiente' %}
+                            <span class="text-success fw-bold">Esperando retiro</span>
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <div class="modal fade" id="llegadaModal{{ paquete.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header bg-warning">
+                                <h5 class="modal-title">Confirmar llegada a destino</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-dark">
+                                ¿Está seguro de marcar el paquete <strong>#{{ paquete.id }}</strong> ({{ paquete.descripcion }}) como <strong>LLEGADO</strong> a {{ paquete.destino }}?
+                                <br><br>
+                                <small class="text-muted">El estado cambiará a 'Pendiente' y el paquete estará listo para entrega final.</small>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <a href="{% url 'marcar_como_llegado' paquete.id %}" class="btn btn-success">Sí, confirmar llegada</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-dark">No hay resultados.</td> </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+{% endblock %}

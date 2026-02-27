@@ -31,5 +31,7 @@ urlpatterns = [
     path('listapaquetess/', views.lista_paque, name='lista_paque'),
     path('cambiar_estado_paquete/<int:paquete_id>/', views.cambiar_estado_paquete, name='cambiar_estado_paquete'),
     path('factura/<int:paquete_id>/', views.generar_factura, name='generar_factura'),
+    path('seguimiento/', views.vista_seguimiento, name='seguimiento_paquetes'),
+    path('marcar-llegado/<int:paquete_id>/', views.marcar_como_llegado, name='marcar_como_llegado'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

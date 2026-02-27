@@ -50,9 +50,12 @@
                     <a class="nav-link" href="{% url 'crear_envio' %}"><i class="bi bi-plus-square me-2"></i> Registrar Nuevo Envío</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'listar_paquetes' %}"><i class="bi bi-list-check me-2"></i> Gestión de Envíos</a>
+                    <a class="nav-link" href="{% url 'seguimiento_paquetes' %}"><i class="bi bi-gear me-2"></i> Registro de Paquetes</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'listar_paquetes' %}"><i class="bi bi-list-check me-2"></i> Registro Entrega de Paquetes</a>
+                </li>
+                <li class="nav-item"> 
                     <a class="nav-link" href="{% url 'admin:index' %}"><i class="bi bi-gear me-2"></i> Panel Administrativo</a>
                 </li>
                 {% endif %}
